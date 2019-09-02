@@ -24,11 +24,11 @@ class SecurityLayout extends React.Component<SecurityLayoutProps, SecurityLayout
       isReady: true,
     });
     const { dispatch } = this.props;
-    if (dispatch) {
-      dispatch({
-        type: 'user/fetchCurrent',
-      });
-    }
+    // if (dispatch) {
+    //   dispatch({
+    //     type: 'user/fetchCurrent',
+    //   });
+    // }
   }
 
   render() {
@@ -37,9 +37,9 @@ class SecurityLayout extends React.Component<SecurityLayoutProps, SecurityLayout
     if ((!currentUser.userid && loading) || !isReady) {
       return <PageLoading />;
     }
-    if (!currentUser.userid) {
-      return <Redirect to="/user/login"></Redirect>;
-    }
+    // if (!currentUser.userid) {
+    //   return <Redirect to="/user/login"></Redirect>;
+    // }
     return children;
   }
 }

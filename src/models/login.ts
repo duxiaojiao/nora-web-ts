@@ -4,12 +4,13 @@ import { Effect } from 'dva';
 import { stringify } from 'querystring';
 
 import { fakeAccountLogin, getFakeCaptcha } from '@/services/login';
-import { setAuthority } from '@/utils/authority';
+import { setToken, setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 
 export interface StateType {
   status?: 'ok' | 'error';
   type?: string;
+  errorMessage: string;
   currentAuthority?: 'user' | 'guest' | 'admin';
 }
 
@@ -36,12 +37,17 @@ const Model: LoginModelType = {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: response,
-      });
       // Login successfully
-      if (response.status === 'ok') {
+      if (response.access_token) {
+        // yield put({
+        //   type: 'changeLoginStatus',
+        //   payload: response,
+        // });
+        //拿到token，保存到localStorage
+        const { access_token, token_type } = response;
+        const token = `${token_type} ${access_token}`;
+        setToken(token);
+
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params as { redirect: string };
@@ -58,6 +64,11 @@ const Model: LoginModelType = {
           }
         }
         yield put(routerRedux.replace(redirect || '/'));
+      } else if (response.error) {
+        yield put({
+          type: 'changeLoginStatus',
+          payload: { status: 'error', errorMessage: response.error_description, type: 'account' },
+        });
       }
     },
 
@@ -82,11 +93,10 @@ const Model: LoginModelType = {
 
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.currentAuthority);
+      // setAuthority(payload.currentAuthority);
       return {
         ...state,
-        status: payload.status,
-        type: payload.type,
+        ...payload,
       };
     },
   },

@@ -120,6 +120,18 @@ export default {
               component: './list/table/list',
             },
             {
+              path: '/system',
+              icon: 'table',
+              name: '系统管理',
+              routes: [
+                {
+                  name: '用户管理',
+                  path: '/system/user',
+                  component: './system/user',
+                },
+              ],
+            },
+            {
               component: './404',
             },
           ],
@@ -153,7 +165,7 @@ export default {
         resourcePath: string;
       },
       _: string,
-      localName: string
+      localName: string,
     ) => {
       if (
         context.resourcePath.includes('node_modules') ||
@@ -181,13 +193,12 @@ export default {
     basePath: '/',
   },
   chainWebpack: webpackPlugin,
-  /*
   proxy: {
-    '/server/api/': {
-      target: 'https://preview.pro.ant.design/',
+    '/nora': {
+      // target: 'http://118.89.174.242:8090/',
+      target: 'http://localhost:8090/',
       changeOrigin: true,
-      pathRewrite: { '^/server': '' },
+      // pathRewrite: { '^/nora': 'nora' },
     },
   },
-  */
 } as IConfig;

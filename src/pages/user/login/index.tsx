@@ -48,7 +48,7 @@ class Login extends Component<LoginProps, LoginState> {
       const { dispatch } = this.props;
       dispatch({
         type: 'login/login',
-        payload: { ...values, type },
+        payload: { ...values },
       });
     }
   };
@@ -101,7 +101,7 @@ class Login extends Component<LoginProps, LoginState> {
 
   render() {
     const { userLogin, submitting } = this.props;
-    const { status, type: loginType } = userLogin;
+    const { status, type: loginType, errorMessage } = userLogin;
     const { type, autoLogin } = this.state;
     return (
       <div className={styles.main}>
@@ -117,11 +117,11 @@ class Login extends Component<LoginProps, LoginState> {
             {status === 'error' &&
               loginType === 'account' &&
               !submitting &&
-              this.renderMessage('账户或密码错误（admin/admin）')}
+              this.renderMessage(errorMessage)}
             <UserName
-              name="userName"
+              name="username"
               placeholder={`${'用户名'}: admin or user`}
-              initialValue='admin'
+              initialValue="admin"
               rules={[
                 {
                   required: true,

@@ -1,16 +1,23 @@
 import request from 'umi-request';
 
 export interface LoginParamsType {
-  userName: string;
+  username: string;
   password: string;
   mobile: string;
   captcha: string;
 }
 
 export async function fakeAccountLogin(params: LoginParamsType) {
-  return request('/api/login/account', {
+  return request('/oauth/token', {
     method: 'POST',
-    data: params,
+    params: {
+      ...params,
+      grant_type: 'password',
+      scope: 'all',
+    },
+    headers: {
+      Authorization: 'Basic Y2xpZW50XzI6MTIzNDU2',
+    },
   });
 }
 
