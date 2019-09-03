@@ -5,7 +5,7 @@ import { queryCurrent, query as queryUsers } from '@/services/user';
 
 export interface CurrentUser {
   avatar?: string;
-  name?: string;
+  userName?: string;
   title?: string;
   group?: string;
   signature?: string;
@@ -13,7 +13,7 @@ export interface CurrentUser {
     key: string;
     label: string;
   }[];
-  userid?: string;
+  userId?: string;
   unreadCount?: number;
 }
 
@@ -51,9 +51,10 @@ const UserModel: UserModelType = {
     },
     *fetchCurrent(_, { call, put }) {
       const response = yield call(queryCurrent);
+      console.log(response);
       yield put({
         type: 'saveCurrentUser',
-        payload: response,
+        payload: response.data,
       });
     },
   },

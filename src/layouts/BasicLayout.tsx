@@ -72,16 +72,16 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
    * constructor
    */
 
-  // useEffect(() => {
-  //   if (dispatch) {
-  //     dispatch({
-  //       type: 'user/fetchCurrent',
-  //     });
-  //     dispatch({
-  //       type: 'settings/getSetting',
-  //     });
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (dispatch) {
+      dispatch({
+        type: 'user/fetchCurrent',
+      });
+      dispatch({
+        type: 'settings/getSetting',
+      });
+    }
+  }, []);
   /**
    * init variables
    */

@@ -24,22 +24,23 @@ class SecurityLayout extends React.Component<SecurityLayoutProps, SecurityLayout
       isReady: true,
     });
     const { dispatch } = this.props;
-    // if (dispatch) {
-    //   dispatch({
-    //     type: 'user/fetchCurrent',
-    //   });
-    // }
+    if (dispatch) {
+      dispatch({
+        type: 'user/fetchCurrent',
+      });
+    }
   }
 
   render() {
     const { isReady } = this.state;
     const { children, loading, currentUser } = this.props;
-    if ((!currentUser.userid && loading) || !isReady) {
+    if ((!currentUser.userId && loading) || !isReady) {
       return <PageLoading />;
     }
-    // if (!currentUser.userid) {
-    //   return <Redirect to="/user/login"></Redirect>;
-    // }
+    console.log(this.props);
+    if (!currentUser.userId) {
+      return <Redirect to="/user/login"></Redirect>;
+    }
     return children;
   }
 }
