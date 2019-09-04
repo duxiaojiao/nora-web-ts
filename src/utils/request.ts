@@ -5,7 +5,7 @@
 import { extend } from 'umi-request';
 import { notification } from 'antd';
 import router from 'umi/router';
-import { getToken, removeAll } from './authority';
+import { getToken } from './authority';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -30,7 +30,6 @@ const codeMessage = {
  */
 const errorHandler = (error: { response: Response }): Response => {
   const { response } = error;
-  console.log('测试', response);
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
@@ -48,25 +47,6 @@ const errorHandler = (error: { response: Response }): Response => {
   return response;
 };
 
-const checkStatus = response => {
-  if (
-    (response.status >= 200 && response.status < 300) ||
-    // 针对于要显示后端返回自定义详细信息的status, 配置跳过
-    (response.status === 400 || response.status === 500)
-  ) {
-    return response;
-  }
-  const errortext = codeMessage[response.status] || response.statusText;
-  notification.error({
-    message: `请求错误 ${response.status}: ${response.url}`,
-    description: errortext,
-  });
-  const error = new Error(errortext);
-  error.name = response.status;
-  error.response = response;
-  throw error;
-};
-
 /**
  * 配置request请求时的默认参数
  */
@@ -74,13 +54,23 @@ const request = extend({
   errorHandler, // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
   // prefix:'/nora',
-  headers: {
-    Authorization: getToken(), // 统一的headers
-  },
+  // headers: {
+  //   Authorization: getToken(), // 统一的headers
+  // },
 });
 
 //request拦截器, 改变url 或 options.
 request.interceptors.request.use((url, options) => {
+  let token = getToken();
+  if (token) {
+    const headers = {
+      Authorization: token,
+    };
+    return {
+      url: `/nora${url}`,
+      options: { ...options, headers: headers },
+    };
+  }
   return {
     url: `/nora${url}`,
     options: { ...options },
@@ -90,10 +80,26 @@ request.interceptors.request.use((url, options) => {
 // response拦截器, 处理response
 //https://github.com/umijs/umi/issues/2574 解决4xx报错的问题
 request.interceptors.response.use((response, options) => {
-  if (response.status === 401 || !getToken()) {
+  const { status, body, headers } = response;
+  if (status === 401) {
+    notification.error({
+      message: '未登录或登录已过期，请重新登录。',
+    });
     router.push('/user/login');
   }
-  return new Response(response.body, { status: 200, statusText: 'ok', headers: response.headers });
+
+  if (status === 403) {
+    router.push('/exception/403');
+    return response;
+  }
+  if (status <= 504 && status >= 500) {
+    router.push('/exception/500');
+    return response;
+  }
+  if (status >= 404 && status < 422) {
+    router.push('/exception/404');
+  }
+  return new Response(body, { status: 200, statusText: 'ok', headers: headers });
 });
 
 export default request;

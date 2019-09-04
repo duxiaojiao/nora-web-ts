@@ -29,9 +29,13 @@ export function setAuthority(authority: string | string[]): void {
 }
 
 export function getToken() {
-  return localStorage.getItem('Authorization');
+  return localStorage.getItem('noraToken');
 }
 
 export function setToken(token: string) {
-  localStorage.setItem('Authorization', token);
+  localStorage.setItem('noraToken', token);
+}
+
+export function removeAll() {
+  localStorage.removeItem('noraToken');
 }

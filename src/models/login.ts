@@ -4,7 +4,7 @@ import { Effect } from 'dva';
 import { stringify } from 'querystring';
 
 import { fakeAccountLogin, getFakeCaptcha } from '@/services/login';
-import { setToken, setAuthority } from '@/utils/authority';
+import { setToken, removeAll } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 
 export interface StateType {
@@ -39,15 +39,16 @@ const Model: LoginModelType = {
       const response = yield call(fakeAccountLogin, payload);
       // Login successfully
       if (response.access_token) {
-        // yield put({
-        //   type: 'changeLoginStatus',
-        //   payload: response,
-        // });
-        //拿到token，保存到localStorage
         const { access_token, token_type } = response;
-        const token = `${token_type} ${access_token}`;
-        setToken(token);
-
+        yield yield put({
+          type: 'changeLoginStatus',
+          payload: {
+            status: 'ok',
+            type: 'account',
+            access_token: access_token,
+            token_type: token_type,
+          },
+        });
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params as { redirect: string };
@@ -63,7 +64,7 @@ const Model: LoginModelType = {
             return;
           }
         }
-        yield put(routerRedux.replace(redirect || '/'));
+        yield yield put(routerRedux.replace(redirect || '/'));
       } else if (response.error) {
         yield put({
           type: 'changeLoginStatus',
@@ -77,6 +78,13 @@ const Model: LoginModelType = {
     },
     *logout(_, { put }) {
       const { redirect } = getPageQuery();
+      yield put({
+        type: 'changeLoginStatus',
+        payload: {
+          status: 'logout',
+          type: 'account',
+        },
+      });
       // redirect
       if (window.location.pathname !== '/user/login' && !redirect) {
         yield put(
@@ -94,6 +102,16 @@ const Model: LoginModelType = {
   reducers: {
     changeLoginStatus(state, { payload }) {
       // setAuthority(payload.currentAuthority);
+      //登录成功，保存token
+      if (payload.status === 'ok') {
+        //拿到token，保存到localStorage
+        const token = `${payload.token_type} ${payload.access_token}`;
+        setToken(token);
+      }
+      if (payload.status === 'logout') {
+        //退出则清空token
+        removeAll();
+      }
       return {
         ...state,
         ...payload,

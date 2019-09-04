@@ -121,7 +121,7 @@ class Login extends Component<LoginProps, LoginState> {
             <UserName
               name="username"
               placeholder={`${'用户名'}: admin or user`}
-              initialValue="admin"
+              initialvalue="admin"
               rules={[
                 {
                   required: true,
@@ -131,7 +131,7 @@ class Login extends Component<LoginProps, LoginState> {
             />
             <Password
               name="password"
-              placeholder={`${'密码'}: admin`}
+              placeholder={`${'密码'}: 123456`}
               rules={[
                 {
                   required: true,
