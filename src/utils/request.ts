@@ -85,7 +85,9 @@ request.interceptors.response.use((response, options) => {
     notification.error({
       message: '未登录或登录已过期，请重新登录。',
     });
-    router.push('/user/login');
+    window.g_app._store.dispatch({
+      type: 'login/logout',
+    });
   }
 
   if (status === 403) {
