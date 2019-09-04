@@ -52,7 +52,7 @@ class UserList extends Component<UserProps, UserState> {
   render() {
     return (
       <PageHeaderWrapper>
-        <div>测试用户</div>
+        <div>测试自动发布</div>
       </PageHeaderWrapper>
     );
   }
