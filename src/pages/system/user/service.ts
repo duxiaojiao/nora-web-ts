@@ -8,32 +8,29 @@ export async function queryUser(params: UserParams) {
   });
 }
 
-export async function removeUser(params: UserParams) {
-  return request('/system/User', {
-    method: 'POST',
-    data: {
-      ...params,
-      method: 'delete',
-    },
-  });
-}
-
 export async function addUser(params: UserParams) {
-  return request('/system/User', {
+  return request('/system/user', {
     method: 'POST',
-    data: {
-      ...params,
-      method: 'post',
-    },
+    data: params,
   });
 }
 
 export async function updateUser(params: UserParams) {
-  return request('/system/User', {
+  return request('/system/user', {
     method: 'POST',
     data: {
       ...params,
       method: 'update',
+    },
+  });
+}
+
+export async function removeUser(params: UserParams) {
+  return request('/system/user', {
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'delete',
     },
   });
 }

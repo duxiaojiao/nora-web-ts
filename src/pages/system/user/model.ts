@@ -59,27 +59,21 @@ const Model: ModelType = {
     },
     *add({ payload, callback }, { call, put }) {
       const response = yield call(addUser, payload);
-      yield put({
-        type: 'save',
-        payload: response,
-      });
+      yield put({ type: 'fetch' });
       if (callback) callback();
+      return response;
     },
     *remove({ payload, callback }, { call, put }) {
       const response = yield call(removeUser, payload);
-      yield put({
-        type: 'save',
-        payload: response,
-      });
+      yield put({ type: 'fetch' });
       if (callback) callback();
+      return response;
     },
     *update({ payload, callback }, { call, put }) {
       const response = yield call(updateUser, payload);
-      yield put({
-        type: 'save',
-        payload: response,
-      });
+      yield put({ type: 'fetch' });
       if (callback) callback();
+      return response;
     },
   },
 
