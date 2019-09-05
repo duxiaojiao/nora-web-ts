@@ -1,11 +1,23 @@
 import { AnyAction, Reducer } from 'redux';
 import { EffectsCommandMap } from 'dva';
-import { addRule, queryRule, removeRule, updateRule } from './service';
+import { addUser, queryUser, removeUser, updateUser } from './service';
 
-import { UserListData } from './data.d';
+import { UserData } from './data.d';
+import {ResponseType} from '@/services/common'
 
 export interface StateType {
-  data: UserListData;
+  data: UserData;
+}
+
+export interface UserListResponse extends ResponseType {
+  data:{
+    records:UserData[]
+    total:number
+    size:number
+    current:number
+    searchCount:boolean
+    pages:number
+  }
 }
 
 export type Effect = (
@@ -28,7 +40,7 @@ export interface ModelType {
 }
 
 const Model: ModelType = {
-  namespace: 'listTableList',
+  namespace: 'userMgt',
 
   state: {
     data: {
@@ -39,14 +51,14 @@ const Model: ModelType = {
 
   effects: {
     *fetch({ payload }, { call, put }) {
-      const response = yield call(queryRule, payload);
+      const response: UserListResponse = yield call(queryUser, payload);
       yield put({
         type: 'save',
-        payload: response,
+        payload: response.data,
       });
     },
     *add({ payload, callback }, { call, put }) {
-      const response = yield call(addRule, payload);
+      const response = yield call(addUser, payload);
       yield put({
         type: 'save',
         payload: response,
@@ -54,7 +66,7 @@ const Model: ModelType = {
       if (callback) callback();
     },
     *remove({ payload, callback }, { call, put }) {
-      const response = yield call(removeRule, payload);
+      const response = yield call(removeUser, payload);
       yield put({
         type: 'save',
         payload: response,
@@ -62,7 +74,7 @@ const Model: ModelType = {
       if (callback) callback();
     },
     *update({ payload, callback }, { call, put }) {
-      const response = yield call(updateRule, payload);
+      const response = yield call(updateUser, payload);
       yield put({
         type: 'save',
         payload: response,
@@ -75,7 +87,14 @@ const Model: ModelType = {
     save(state, action) {
       return {
         ...state,
-        data: action.payload,
+        data: {
+          list: action.payload.records,
+          pagination: {
+            total: action.payload.total,
+            pageSize: action.payload.size,
+            current: action.payload.current,
+          }
+        },
       };
     },
   },

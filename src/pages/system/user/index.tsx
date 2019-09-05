@@ -1,45 +1,45 @@
-import { Form } from 'antd';
+import { Form,Table } from 'antd';
 import React, { Component } from 'react';
-import { StateType } from '@/pages/list/table/list/model';
+import {StateType} from './model';
 import { Dispatch } from 'redux';
 import { FormComponentProps } from 'antd/es/form';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 // import { SorterResult } from 'antd/es/table';
 import { connect } from 'dva';
-import { UserListItem } from './data.d';
+import { UserItem } from './data.d';
 
 interface UserProps extends FormComponentProps {
   dispatch: Dispatch<any>;
   loading: boolean;
-  listTableList: StateType;
+  userMgt: StateType;
 }
 
 interface UserState {
   modalVisible: boolean;
   updateModalVisible: boolean;
   expandForm: boolean;
-  selectedRows: UserListItem[];
+  selectedRows: UserItem[];
   formValues: { [key: string]: string };
-  stepFormValues: Partial<UserListItem>;
+  stepFormValues: Partial<UserItem>;
 }
 
 @connect(
   ({
-    listTableList,
-    loading,
-  }: {
-    listTableList: StateType;
+     userMgt,
+     loading,
+   }: {
+    userMgt: StateType;
     loading: {
       models: {
         [key: string]: boolean;
       };
     };
   }) => ({
-    listTableList,
-    loading: loading.models.rule,
+    userMgt,
+    loading: loading.models.userMgt,
   }),
 )
-class UserList extends Component<UserProps, UserState> {
+class User extends Component<UserProps, UserState> {
   state: UserState = {
     modalVisible: false,
     updateModalVisible: false,
@@ -49,12 +49,53 @@ class UserList extends Component<UserProps, UserState> {
     stepFormValues: {},
   };
 
+  columns = [{
+    title: '用户名',
+    dataIndex: 'userName',
+    key: 'userName',
+  }, {
+    title: '员工姓名',
+    dataIndex: 'empName',
+    key: 'empName',
+  }, {
+    title: '手机号码',
+    dataIndex: 'phone',
+    key: 'phone',
+  }, {
+    title: '邮箱',
+    key: 'email',
+    dataIndex: 'email',
+  }]
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'userMgt/fetch',
+      payload: {
+        current: 1,
+        pageSize: 10,
+      }
+    });
+  }
+
   render() {
+    const {
+      userMgt: { data },
+      loading,
+    } = this.props;
     return (
       <PageHeaderWrapper>
-        <div>测试自动发布</div>
+        <div>
+          <Table
+            columns={this.columns}
+            dataSource={data.list}
+            pagination={data.pagination}
+            loading={loading}
+            rowKey={'key'}
+          />
+        </div>
       </PageHeaderWrapper>
     );
   }
 }
-export default Form.create<UserProps>()(UserList);
+export default Form.create<UserProps>()(User);

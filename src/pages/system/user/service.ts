@@ -1,14 +1,15 @@
 import request from '@/utils/request';
-import { UserListParams } from './data.d';
+import { UserParams } from './data.d';
 
-export async function queryRule(params: UserListParams) {
-  return request('/api/rule', {
-    params,
+export async function queryUser(params: UserParams) {
+  return request('/system/user', {
+    method: 'GET',
+    params: params,
   });
 }
 
-export async function removeRule(params: UserListParams) {
-  return request('/api/rule', {
+export async function removeUser(params: UserParams) {
+  return request('/system/User', {
     method: 'POST',
     data: {
       ...params,
@@ -17,8 +18,8 @@ export async function removeRule(params: UserListParams) {
   });
 }
 
-export async function addRule(params: UserListParams) {
-  return request('/api/rule', {
+export async function addUser(params: UserParams) {
+  return request('/system/User', {
     method: 'POST',
     data: {
       ...params,
@@ -27,8 +28,8 @@ export async function addRule(params: UserListParams) {
   });
 }
 
-export async function updateRule(params: UserListParams) {
-  return request('/api/rule', {
+export async function updateUser(params: UserParams) {
+  return request('/system/User', {
     method: 'POST',
     data: {
       ...params,

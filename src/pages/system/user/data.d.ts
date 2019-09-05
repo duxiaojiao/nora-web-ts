@@ -1,22 +1,22 @@
-export interface UserListItem {
+export interface UserItem {
   userId: number;
   userName: string;
   phone: string;
   email: string;
 }
 
-export interface UserListPagination {
+export interface UserPagination {
   total: number;
   pageSize: number;
   current: number;
 }
 
-export interface UserListData {
-  list: UserListItem[];
-  pagination: Partial<UserListPagination>;
+export interface UserData {
+  list: UserItem[];
+  pagination: Partial<UserPagination>;
 }
 
-export interface UserListParams {
+export interface UserParams {
   userName: string;
   phone: string;
   email: string;
