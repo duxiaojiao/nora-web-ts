@@ -1,4 +1,4 @@
-import {Form, Table, Card, Row, Col, Button, Input, message,Divider} from 'antd';
+import {Form, Table, Card, Row, Col, Button, Input, message,Divider,Popconfirm} from 'antd';
 import React, { Component,Fragment } from 'react';
 import {StateType} from './model';
 import { Dispatch } from 'redux';
@@ -8,6 +8,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect } from 'dva';
 import { UserItem } from './data.d';
 import CreateUser from './components/CreateUser';
+import ResetPassword from './components/ResetPassword';
 
 import styles from './style.less';
 
@@ -20,11 +21,13 @@ interface UserProps extends FormComponentProps {
 
 interface UserState {
   modalVisible: boolean;
-  updateModalVisible: boolean;
+  resetModalVisible: boolean;
   expandForm: boolean;
   selectedRows: UserItem[];
   formValues: { [key: string]: string };
   stepFormValues: Partial<UserItem>;
+  selectUserId: number;
+  record: Partial<UserItem>;
 }
 
 @connect(
@@ -46,11 +49,13 @@ interface UserState {
 class User extends Component<UserProps, UserState> {
   state: UserState = {
     modalVisible: false,
-    updateModalVisible: false,
+    resetModalVisible: false,
     expandForm: false,
     selectedRows: [],
     formValues: {},
     stepFormValues: {},
+    selectUserId: 0,
+    record:{},
   };
 
   columns = [{
@@ -74,9 +79,14 @@ class User extends Component<UserProps, UserState> {
     title: '操作',
     render: (text:string, record:UserItem) => (
       <Fragment>
-        <a onClick={() => this.handleModalVisible(true)}>更新</a>
+        <a onClick={() => this.handleModalVisible(true,record)}>编辑</a>
         <Divider type="vertical" />
-        <a href="">删除</a>
+        <a onClick={() => this.handleResetModalVisible(true,record.userId)}>修改密码</a>
+        <Divider type="vertical" />
+        <Popconfirm title={'确认删除'} okText='确认' cancelText='取消'
+                    onConfirm={() => this.handleRemove(record.userId)}>
+          <a>删除</a>
+        </Popconfirm>
       </Fragment>
     ),
   },
@@ -133,21 +143,52 @@ class User extends Component<UserProps, UserState> {
     });
   };
 
-  handleModalVisible = (flag?: boolean) => {
+  handleModalVisible = (flag?: boolean, record?: UserItem) => {
     this.setState({
       modalVisible: !!flag,
+      record: record || {},
+    });
+  };
+
+  handleResetModalVisible = (flag?: boolean, userId?: number) => {
+    this.setState({
+      resetModalVisible: !!flag,
+      selectUserId: userId || 0,
     });
   };
 
   handleAdd = (fields: UserItem) => {
     const {dispatch} = this.props;
-    dispatch({
-      type: 'userMgt/add',
-      payload: fields,
-    });
+    if (fields.userId) {
+      dispatch({
+        type: 'userMgt/update',
+        payload: fields,
+      });
+    } else {
+      dispatch({
+        type: 'userMgt/add',
+        payload: fields,
+      });
+    }
 
     message.success('添加成功');
     this.handleModalVisible();
+  };
+
+  handleReset = (password: string) => {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'userMgt/reset',
+      payload: {id: this.state.selectUserId, password: password},
+    });
+    this.handleResetModalVisible();
+  };
+
+  handleRemove = (userId: number) => {
+    this.props.dispatch({
+      type: 'userMgt/remove',
+      payload: userId,
+    });
   };
 
   renderSimpleForm() {
@@ -193,11 +234,16 @@ class User extends Component<UserProps, UserState> {
       loading,
     } = this.props;
 
-    const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
+    const { selectedRows, modalVisible, resetModalVisible, stepFormValues,record } = this.state;
 
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
+    };
+
+    const resetMethods = {
+      handleReset: this.handleReset,
+      handleResetModalVisible: this.handleResetModalVisible,
     };
     return (
       <PageHeaderWrapper>
@@ -220,7 +266,8 @@ class User extends Component<UserProps, UserState> {
             </div>
           </div>
         </Card>
-        <CreateUser {...parentMethods} modalVisible={modalVisible} />
+        <CreateUser {...parentMethods} modalVisible={modalVisible} record={record}/>
+        <ResetPassword {...resetMethods} modalVisible={resetModalVisible} />
       </PageHeaderWrapper>
     );
   }

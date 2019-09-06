@@ -8,17 +8,18 @@ const FormItem = Form.Item;
 
 interface CreateUserProps extends FormComponentProps {
   modalVisible: boolean;
-  handleAdd: (fieldsValue:UserItem) => void;
+  record: Partial<UserItem>;
+  handleAdd: (fieldsValue: UserItem) => void;
   handleModalVisible: () => void;
 }
 const CreateUser: React.FC<CreateUserProps> = props => {
-  const { modalVisible, form, handleAdd, handleModalVisible, } = props;
+  const {modalVisible, record, form, handleAdd, handleModalVisible,} = props;
   const {getFieldDecorator} = form;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       form.resetFields();
-      handleAdd(fieldsValue);
+      handleAdd({userId: record.userId, ...fieldsValue});
     });
   };
   const formItemLayout = {
@@ -39,18 +40,7 @@ const CreateUser: React.FC<CreateUserProps> = props => {
       >
         {getFieldDecorator('userName', {
           rules: [{required: true}],
-          initialValue: '',
-        })(
-          <Input/>
-        )}
-      </FormItem>
-      <FormItem
-        {...formItemLayout}
-        label="用户名"
-      >
-        {getFieldDecorator('empName', {
-          rules: [{required: true}],
-          initialValue: '',
+          initialValue: record.userName,
         })(
           <Input/>
         )}
@@ -60,7 +50,7 @@ const CreateUser: React.FC<CreateUserProps> = props => {
         label="手机号码"
       >
         {getFieldDecorator('phone', {
-          initialValue: '',
+          initialValue: record.phone,
         })
         (
           <Input/>
@@ -71,7 +61,7 @@ const CreateUser: React.FC<CreateUserProps> = props => {
         label="邮箱"
       >
         {getFieldDecorator('email', {
-          initialValue: '',
+          initialValue: record.email,
         })
         (
           <Input/>

@@ -129,6 +129,16 @@ export default {
                   path: '/system/user',
                   component: './system/user',
                 },
+                {
+                  name: '角色管理',
+                  path: '/system/role',
+                  component: './system/role',
+                },
+                {
+                  name: '菜单管理',
+                  path: '/system/menu',
+                  component: './system/menu',
+                },
               ],
             },
             {

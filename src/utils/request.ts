@@ -54,9 +54,9 @@ const request = extend({
   errorHandler, // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
   // prefix:'/nora',
-  // headers: {
-  //   Authorization: getToken(), // 统一的headers
-  // },
+  headers: {
+    'Content-Type':'application/x-www-form-urlencoded', // 统一的headers
+  },
 });
 
 //request拦截器, 改变url 或 options.
