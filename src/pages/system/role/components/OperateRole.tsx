@@ -2,24 +2,24 @@ import { Form, Input, Modal } from 'antd';
 
 import { FormComponentProps } from 'antd/es/form';
 import React from 'react';
-import {UserItem} from "../data.d";
+import {RoleItem} from "../data.d";
 
 const FormItem = Form.Item;
 
-interface CreateUserProps extends FormComponentProps {
+interface OperateRoleProps extends FormComponentProps {
   modalVisible: boolean;
-  record: Partial<UserItem>;
-  handleAdd: (fieldsValue: UserItem) => void;
+  record: Partial<RoleItem>;
+  handleAdd: (fieldsValue: RoleItem) => void;
   handleModalVisible: () => void;
 }
-const CreateUser: React.FC<CreateUserProps> = props => {
+const OperateRole: React.FC<OperateRoleProps> = props => {
   const {modalVisible, record, form, handleAdd, handleModalVisible,} = props;
   const {getFieldDecorator} = form;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       form.resetFields();
-      handleAdd({userId: record.userId, ...fieldsValue});
+      handleAdd({roleId: record.roleId, ...fieldsValue});
     });
   };
   const formItemLayout = {
@@ -29,28 +29,28 @@ const CreateUser: React.FC<CreateUserProps> = props => {
   return (
     <Modal
       destroyOnClose
-      title="添加用户"
+      title="添加角色"
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
       <FormItem
         {...formItemLayout}
-        label="用户名"
+        label="角色编码"
       >
-        {getFieldDecorator('userName', {
+        {getFieldDecorator('roleCode', {
           rules: [{required: true}],
-          initialValue: record.userName,
+          initialValue: record.roleCode,
         })(
           <Input/>
         )}
       </FormItem>
       <FormItem
         {...formItemLayout}
-        label="手机号码"
+        label="角色名称"
       >
-        {getFieldDecorator('phone', {
-          initialValue: record.phone,
+        {getFieldDecorator('roleName', {
+          initialValue: record.roleName,
         })
         (
           <Input/>
@@ -58,10 +58,10 @@ const CreateUser: React.FC<CreateUserProps> = props => {
       </FormItem>
       <FormItem
         {...formItemLayout}
-        label="邮箱"
+        label="角色描述"
       >
-        {getFieldDecorator('email', {
-          initialValue: record.email,
+        {getFieldDecorator('roleDescr', {
+          initialValue: record.roleDescr,
         })
         (
           <Input/>
@@ -71,4 +71,4 @@ const CreateUser: React.FC<CreateUserProps> = props => {
   );
 };
 
-export default Form.create<CreateUserProps>()(CreateUser);
+export default Form.create<OperateRoleProps>()(OperateRole);
