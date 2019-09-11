@@ -1,5 +1,6 @@
 import request from '@/utils/request';
 import {RoleParams, RoleItem} from './data.d';
+import {MenuParams} from "@/pages/system/menu/data";
 
 export async function queryRole(params: RoleParams) {
   return request('/system/role/roles', {
@@ -37,15 +38,23 @@ export async function removeRole(params: number) {
   });
 }
 
+export async function queryMenuSelectTree(params: MenuParams) {
+  return request('/system/menu/selectMenuTree', {
+    method: 'GET',
+  });
+}
+
 export async function queryRoleMenu(params: number) {
   return request('/system/role/'+params+'/menu', {
     method: 'GET',
   });
 }
 
-export async function updateRoleMenu(params: { id: number, menuIds: number[] }) {
-  return request('/system/role/' + params + '/menus', {
+export async function updateRoleMenu(params: { id: number, menuIds: string[] }) {
+  console.log('menuIds', params.menuIds);
+  return request('/system/role/' + params.id + '/menus', {
     method: 'PUT',
-    data: params.menuIds,
+    data: {menuIds: params.menuIds.map(Number)},
+    requestType: 'form',
   });
 }

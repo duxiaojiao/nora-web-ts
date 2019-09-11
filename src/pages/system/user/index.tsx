@@ -11,10 +11,12 @@ import CreateUser from './components/CreateUser';
 import ResetPassword from './components/ResetPassword';
 
 import styles from './style.less';
+import {ResponseType} from "@/services/common";
+import {RoleItem} from "@/pages/system/role/data";
+import {ConnectProps} from "@/models/connect";
 
 const FormItem = Form.Item;
-interface UserProps extends FormComponentProps {
-  dispatch: Dispatch<any>;
+interface UserProps extends FormComponentProps,ConnectProps {
   loading: boolean;
   userMgt: StateType;
 }
@@ -28,6 +30,7 @@ interface UserState {
   stepFormValues: Partial<UserItem>;
   selectUserId: number;
   record: Partial<UserItem>;
+  roleList: RoleItem[];
 }
 
 @connect(
@@ -56,6 +59,7 @@ class User extends Component<UserProps, UserState> {
     stepFormValues: {},
     selectUserId: 0,
     record:{},
+    roleList:[],
   };
 
   columns = [{
@@ -99,6 +103,18 @@ class User extends Component<UserProps, UserState> {
       payload: {
         current: 1,
         pageSize: 10,
+      }
+    });
+    dispatch({
+      type: 'userMgt/queryRole',
+      payload: {},
+    }).then((response: ResponseType) => {
+      if (response.code === 0) {
+        this.setState({
+          roleList: response.data
+        });
+      } else {
+        message.error(response.msg)
       }
     });
 
@@ -236,7 +252,7 @@ class User extends Component<UserProps, UserState> {
       loading,
     } = this.props;
 
-    const { selectedRows, modalVisible, resetModalVisible, stepFormValues,record } = this.state;
+    const { modalVisible, resetModalVisible,record,roleList } = this.state;
 
     const parentMethods = {
       handleAdd: this.handleAdd,
@@ -268,7 +284,7 @@ class User extends Component<UserProps, UserState> {
             </div>
           </div>
         </Card>
-        <CreateUser {...parentMethods} modalVisible={modalVisible} record={record}/>
+        <CreateUser {...parentMethods} modalVisible={modalVisible} record={record} roleList={roleList}/>
         <ResetPassword {...resetMethods} modalVisible={resetModalVisible} />
       </PageHeaderWrapper>
     );

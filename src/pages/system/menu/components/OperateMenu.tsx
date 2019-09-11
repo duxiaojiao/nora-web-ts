@@ -10,7 +10,7 @@ const { Option } = Select;
 interface OperateMenuProps extends FormComponentProps {
   modalVisible: boolean;
   record: Partial<MenuItem>;
-  menuSelectTree: Partial<MenuSelectTree>;
+  menuSelectTree: MenuSelectTree[];
   handleAdd: (fieldsValue: MenuItem) => void;
   handleModalVisible: () => void;
 }

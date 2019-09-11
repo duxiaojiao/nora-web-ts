@@ -3,6 +3,7 @@ export interface UserItem {
   userName: string;
   phone: string;
   email: string;
+  roleIds:number[];
 }
 
 export interface UserPagination {

@@ -7,6 +7,7 @@ import { connect } from 'dva';
 import {RoleItem} from './data.d';
 import styles from './style.less';
 import OperateRole from './components/OperateRole';
+import AssignMenu from './components/AssignMenu';
 import {ConnectProps} from '@/models/connect'
 import {ResponseType} from '@/services/common'
 
@@ -19,8 +20,11 @@ interface RoleProps extends FormComponentProps,ConnectProps {
 
 interface RoleState {
   modalVisible: boolean;
+  assignModalVisible:boolean,
   formValues: { [key: string]: string };
   record: Partial<RoleItem>;
+  selectRoleId:number;
+  roleMenus:[],
 }
 
 @connect(
@@ -43,8 +47,11 @@ interface RoleState {
 class Role extends Component<RoleProps, RoleState> {
   state: RoleState = {
     modalVisible: false,
+    assignModalVisible: false,
     formValues: {},
     record: {},
+    selectRoleId: 0,
+    roleMenus:[],
   };
 
   columns = [{
@@ -66,6 +73,8 @@ class Role extends Component<RoleProps, RoleState> {
         <Fragment>
           <a onClick={() => this.handleModalVisible(true, record)}>编辑</a>
           <Divider type="vertical"/>
+          <a onClick={() => this.handleAssignModal(true, record.roleId)}>分配菜单</a>
+          <Divider type="vertical"/>
           <Popconfirm title={'确认删除'} okText='确认' cancelText='取消'
                       onConfirm={() => this.handleRemove(record.roleId)}>
             <a>删除</a>
@@ -80,6 +89,13 @@ class Role extends Component<RoleProps, RoleState> {
     const {dispatch} = this.props;
     dispatch({
       type: 'roleMgt/fetch',
+      payload: {
+        current: 1,
+        pageSize: 10,
+      }
+    });
+    dispatch({
+      type: 'roleMgt/menuSelectTree',
       payload: {
         current: 1,
         pageSize: 10,
@@ -167,8 +183,41 @@ class Role extends Component<RoleProps, RoleState> {
         }
       })
     }
-
   }
+
+  handleAssign = (checkedKeys: string[]) => {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'roleMgt/updateRoleMenu',
+      payload: {id: this.state.selectRoleId, menuIds: checkedKeys},
+    });
+    this.handleAssignModalVisible();
+  };
+
+  handleAssignModal = (flag?: boolean, roleId?: number) => {
+    this.props.dispatch({
+      type: 'roleMgt/queryRoleMenu',
+      payload: roleId,
+    }).then((response: ResponseType) => {
+      if (response.code === 0) {
+       this.setState({
+         roleMenus:response.data
+       });
+        this.handleAssignModalVisible(flag,roleId);
+      } else {
+        message.error(response.msg)
+      }
+    });
+  };
+
+  handleAssignModalVisible = (flag?: boolean, roleId?: number) => {
+    this.setState({
+      assignModalVisible: !!flag,
+      selectRoleId: roleId || 0,
+      roleMenus:[],
+    });
+  };
+
   renderSimpleForm() {
     const { form } = this.props;
     const { getFieldDecorator } = form;
@@ -207,13 +256,17 @@ class Role extends Component<RoleProps, RoleState> {
 
   render() {
     const {
-      roleMgt: { data },
+      roleMgt: { data,menuSelectTree, },
       loading,
     } = this.props;
-    const {modalVisible, record} = this.state;
+    const {modalVisible, assignModalVisible, record, selectRoleId, roleMenus} = this.state;
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
+    };
+    const assignMethods = {
+      handleAssign: this.handleAssign,
+      handleAssignModalVisible: this.handleAssignModalVisible,
     };
     return(
       <PageHeaderWrapper>
@@ -237,6 +290,7 @@ class Role extends Component<RoleProps, RoleState> {
           </div>
         </Card>
         <OperateRole {...parentMethods} modalVisible={modalVisible} record={record}/>
+        <AssignMenu {...assignMethods} modalVisible={assignModalVisible} treeData={menuSelectTree} roleId={selectRoleId} roleMenus={roleMenus.map(String)}/>
       </PageHeaderWrapper>
     )
   }

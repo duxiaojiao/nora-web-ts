@@ -22,10 +22,6 @@ export interface MenuData {
   pagination: Partial<MenuPagination>;
 }
 
-export interface MenuSelectTree  {
-  menuSelectTree:[];
-}
-
 export interface MenuParams {
   menuCode: string;
   menuName: string;

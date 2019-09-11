@@ -8,7 +8,7 @@ import { TreeNodeNormal } from 'antd/lib/tree-select/interface';
 
 export interface StateType {
   data: MenuData;
-  menuSelectTree?: MenuSelectTree
+  menuSelectTree: MenuSelectTree[]
 }
 
 export interface MenuListResponse extends ResponseType {
@@ -53,6 +53,7 @@ const Model: ModelType = {
       list: [],
       pagination: {},
     },
+    menuSelectTree:[]
   },
 
   effects: {
@@ -92,8 +93,9 @@ const Model: ModelType = {
 
   reducers: {
     save(state, action) {
+      const s1 = <StateType>state
       return {
-        ...state,
+        ...s1,
         data: {
           list: action.payload,
           pagination: {},

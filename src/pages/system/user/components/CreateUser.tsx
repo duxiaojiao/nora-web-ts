@@ -1,19 +1,22 @@
-import { Form, Input, Modal } from 'antd';
+import { Form, Input, Modal,TreeSelect } from 'antd';
 
 import { FormComponentProps } from 'antd/es/form';
 import React from 'react';
 import {UserItem} from "../data.d";
+import {RoleItem} from "@/pages/system/role/data";
 
 const FormItem = Form.Item;
 
 interface CreateUserProps extends FormComponentProps {
   modalVisible: boolean;
   record: Partial<UserItem>;
+  roleList: RoleItem[];
   handleAdd: (fieldsValue: UserItem) => void;
   handleModalVisible: () => void;
 }
 const CreateUser: React.FC<CreateUserProps> = props => {
-  const {modalVisible, record, form, handleAdd, handleModalVisible,} = props;
+  const {modalVisible, record, form, handleAdd, handleModalVisible,roleList} = props;
+  const treeData = roleList.map(e => ({title: e.roleName, value: e.roleId, key: e.roleId}));
   const {getFieldDecorator} = form;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
@@ -65,6 +68,25 @@ const CreateUser: React.FC<CreateUserProps> = props => {
         })
         (
           <Input/>
+        )}
+      </FormItem>
+      <FormItem
+        {...formItemLayout}
+        label="角色"
+      >
+        {getFieldDecorator('roleIds',{
+          initialValue:record.roleIds,
+        })
+        (
+          <TreeSelect
+            searchPlaceholder='Please select'
+            showCheckedStrategy='SHOW_PARENT'
+            // value={this.state.value}
+            // onChange={this.onChange}
+            treeCheckable={true}
+            treeData={treeData}
+            style={{width:300}}
+          />
         )}
       </FormItem>
     </Modal>

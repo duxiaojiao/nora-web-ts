@@ -6,7 +6,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import {ConnectProps} from "@/models/connect";
 import {MenuItem} from './data.d';
 import { connect } from 'dva';
-import styles from "@/pages/system/role/style.less";
+import styles from "./style.less";
 import {ResponseType} from "@/services/common";
 import OperateMenu from './components/OperateMenu';
 

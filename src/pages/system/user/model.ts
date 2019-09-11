@@ -1,6 +1,6 @@
 import { AnyAction, Reducer } from 'redux';
 import { EffectsCommandMap } from 'dva';
-import { addUser, queryUser, removeUser, updateUser,resetPwd } from './service';
+import { addUser, queryUser,queryRole, removeUser, updateUser,resetPwd } from './service';
 
 import { UserData } from './data.d';
 import {ResponseType} from '@/services/common'
@@ -30,6 +30,7 @@ export interface ModelType {
   state: StateType;
   effects: {
     fetch: Effect;
+    queryRole: Effect;
     add: Effect;
     remove: Effect;
     update: Effect;
@@ -57,6 +58,9 @@ const Model: ModelType = {
         type: 'save',
         payload: response.data,
       });
+    },
+    * queryRole({payload}, {call, put}) {
+      return yield call(queryRole, payload);
     },
     *add({ payload, callback }, { call, put }) {
       const response = yield call(addUser, payload);

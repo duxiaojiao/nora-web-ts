@@ -1,10 +1,18 @@
 import request from '@/utils/request';
 import {UserParams, UserItem} from './data.d';
+import {RoleParams} from "@/pages/system/role/data";
 
 export async function queryUser(params: UserParams) {
   return request('/system/user', {
     method: 'GET',
     params: params,
+  });
+}
+
+export async function queryRole(params: RoleParams) {
+  return request('/system/role/roles', {
+    method: 'GET',
+    // params: params,
   });
 }
 

@@ -1,12 +1,15 @@
-import { AnyAction, Reducer } from 'redux';
-import { EffectsCommandMap } from 'dva';
-import { addRole, queryRole,queryRolePage, removeRole, updateRole,} from './service';
+import {AnyAction, Reducer} from 'redux';
+import {EffectsCommandMap} from 'dva';
+import {addRole, queryRole, queryRoleMenu, queryRolePage, removeRole, updateRole, updateRoleMenu} from './service';
 
-import { RoleData } from './data.d';
+import {RoleData} from './data.d';
 import {ResponseType} from '@/services/common'
+import {queryMenuSelectTree} from "@/pages/system/menu/service";
 
 export interface StateType {
   data: RoleData;
+  roleMenus: [];
+  menuSelectTree: [];
 }
 
 export interface RoleListResponse extends ResponseType {
@@ -33,9 +36,15 @@ export interface ModelType {
     add: Effect;
     remove: Effect;
     update: Effect;
+    queryRole: Effect;
+    queryRoleMenu: Effect;
+    updateRoleMenu: Effect;
+    menuSelectTree: Effect;
   };
   reducers: {
     save: Reducer<StateType>;
+    saveRoleMenu:Reducer<StateType>;
+    saveMenuSelectTree:Reducer<StateType>;
   };
 }
 
@@ -47,6 +56,8 @@ const Model: ModelType = {
       list: [],
       pagination: {},
     },
+    roleMenus:[],
+    menuSelectTree:[],
   },
 
   effects: {
@@ -75,12 +86,32 @@ const Model: ModelType = {
       if (callback) callback();
       return response;
     },
+    * queryRole({payload}, {call, put}) {
+      return yield call(queryRole, payload);
+    },
+    * queryRoleMenu({payload}, {call, put}) {
+      return yield call(queryRoleMenu, payload);
+    },
+    * updateRoleMenu({payload, callback}, {call, put}) {
+      console.log('payload',payload);
+      const response = yield call(updateRoleMenu, payload);
+      if (callback) callback();
+      return response;
+    },
+    * menuSelectTree({payload}, {call, put}) {
+      const response: ResponseType = yield call(queryMenuSelectTree, payload);
+      yield put({
+        type: 'saveMenuSelectTree',
+        payload: response.data,
+      });
+    },
   },
 
   reducers: {
     save(state, action) {
+      const s1 = <StateType>state
       return {
-        ...state,
+        ...s1,
         data: {
           list: action.payload.records,
           pagination: {
@@ -89,6 +120,20 @@ const Model: ModelType = {
             current: action.payload.current,
           }
         },
+      };
+    },
+    saveRoleMenu(state, action) {
+      const s1 = <StateType>state;
+      return {
+        ...s1,
+        roleMenus: action.payload,
+      };
+    },
+    saveMenuSelectTree(state, action) {
+      const s1 = <StateType>state
+      return {
+        ...s1,
+        menuSelectTree: action.payload,
       };
     },
   },
