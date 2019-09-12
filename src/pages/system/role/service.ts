@@ -51,7 +51,6 @@ export async function queryRoleMenu(params: number) {
 }
 
 export async function updateRoleMenu(params: { id: number, menuIds: string[] }) {
-  console.log('menuIds', params.menuIds);
   return request('/system/role/' + params.id + '/menus', {
     method: 'PUT',
     data: {menuIds: params.menuIds.map(Number)},

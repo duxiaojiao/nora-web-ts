@@ -93,7 +93,6 @@ const Model: ModelType = {
       return yield call(queryRoleMenu, payload);
     },
     * updateRoleMenu({payload, callback}, {call, put}) {
-      console.log('payload',payload);
       const response = yield call(updateRoleMenu, payload);
       if (callback) callback();
       return response;
