@@ -91,8 +91,11 @@ request.interceptors.response.use((response, options) => {
   }
 
   if (status === 403) {
-    router.push('/exception/403');
-    return response;
+    // router.push('/exception/403');
+    // return response;
+    notification.error({
+      message: "没有权限，请联系管理员处理",
+    });
   }
   if (status <= 504 && status >= 500) {
     router.push('/exception/500');

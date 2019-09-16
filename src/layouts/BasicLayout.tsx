@@ -66,7 +66,7 @@ const footerRender: BasicLayoutProps['footerRender'] = (_, defaultDom) => {
 };
 
 const BasicLayout: React.FC<BasicLayoutProps> = props => {
-  const { dispatch, children, settings,menuData } = props;
+  const { dispatch, children, settings,menuData,collapsed,selectedKeys } = props;
   /**
    * constructor
    */
@@ -87,7 +87,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   /**
    * init variables
    */
-
   const handleMenuCollapse = (payload: boolean): void => {
     if (dispatch) {
       dispatch({
@@ -100,7 +99,10 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   return (
     <ProLayout
       logo={logo}
+      collapsed={collapsed}
       onCollapse={handleMenuCollapse}
+      openKeys={false}
+      // selectedKeys={['1001']}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl) {
           return defaultDom;

@@ -139,6 +139,9 @@ export default {
                   path: '/system/menu',
                   component: './system/menu',
                 },
+                {
+                  component: './404',
+                },
               ],
             },
             {
