@@ -140,6 +140,11 @@ export default {
                   component: './system/menu',
                 },
                 {
+                  name: '数据字典',
+                  path: '/system/dict',
+                  component: './system/dict',
+                },
+                {
                   component: './404',
                 },
               ],
