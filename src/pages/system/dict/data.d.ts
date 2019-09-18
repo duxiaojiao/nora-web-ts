@@ -5,6 +5,15 @@ export interface DictItem {
   descr: string;
 }
 
+export interface DictDetail {
+  id: number;
+  dictId: number;
+  itemValue: string;
+  itemText: string;
+  descr: string;
+  sorter: number;
+}
+
 export interface DictPagination {
   total: number;
   pageSize: number;
@@ -20,4 +29,9 @@ export interface DictParams {
   dictCodeOrName: string;
   size: number;
   current: number;
+}
+
+export interface DictDetailParams {
+  dictId: number;
+  itemValueOrText: string;
 }

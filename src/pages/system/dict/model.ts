@@ -1,14 +1,13 @@
 import {AnyAction, Reducer} from 'redux';
 import {EffectsCommandMap} from 'dva';
-import {addDict, queryDict, updateDict, removeDict} from './service';
+import {addDict, queryDict, updateDict, removeDict, addDictItem,updateDictItem,removeDictItem, queryDictItem} from './service';
 
-import {DictData} from './data.d';
+import {DictData, DictDetail} from './data.d';
 import {ResponseType} from '@/services/common'
 
 export interface StateType {
   data: DictData;
-  DictMenus: [];
-  menuSelectTree: [];
+  dictDetail: DictDetail[];
 }
 
 export interface DictListResponse extends ResponseType {
@@ -22,6 +21,10 @@ export interface DictListResponse extends ResponseType {
   }
 }
 
+export interface DictItemListResponse extends ResponseType {
+  data: DictDetail[];
+}
+
 export type Effect = (
   action: AnyAction,
   effects: EffectsCommandMap & { select: <T>(func: (state: StateType) => T) => T },
@@ -32,18 +35,17 @@ export interface ModelType {
   state: StateType;
   effects: {
     fetch: Effect;
+    fetchDetail:Effect;
     add: Effect;
     remove: Effect;
     update: Effect;
-    // queryDict: Effect;
-    // queryDictMenu: Effect;
-    // updateDictMenu: Effect;
-    // menuSelectTree: Effect;
+    addDictItem: Effect;
+    updateDictItem: Effect;
+    removeDictItem: Effect;
   };
   reducers: {
     save: Reducer<StateType>;
-    // saveDictMenu:Reducer<StateType>;
-    // saveMenuSelectTree:Reducer<StateType>;
+    saveDictDetail:Reducer<StateType>;
   };
 }
 
@@ -55,8 +57,7 @@ const Model: ModelType = {
       list: [],
       pagination: {},
     },
-    DictMenus:[],
-    menuSelectTree:[],
+    dictDetail: [],
   },
 
   effects: {
@@ -85,6 +86,31 @@ const Model: ModelType = {
       if (callback) callback();
       return response;
     },
+    * fetchDetail({payload}, {call, put}) {
+      const response: DictItemListResponse = yield call(queryDictItem, payload);
+      yield put({
+        type: 'saveDictDetail',
+        payload: response.data,
+      });
+    },
+    * addDictItem({payload, callback}, {call, put}) {
+      const response = yield call(addDictItem, payload);
+      // yield put({type: 'fetchDetail'});
+      if (callback) callback();
+      return response;
+    },
+    * updateDictItem({payload, callback}, {call, put}) {
+      const response = yield call(updateDictItem, payload);
+      // yield put({type: 'fetchDetail'});
+      if (callback) callback();
+      return response;
+    },
+    * removeDictItem({payload, callback}, {call, put}) {
+      const response = yield call(removeDictItem, payload);
+      // yield put({type: 'fetchDetail'});
+      if (callback) callback();
+      return response;
+    },
   },
 
   reducers: {
@@ -102,20 +128,13 @@ const Model: ModelType = {
         },
       };
     },
-    // saveDictMenu(state, action) {
-    //   const s1 = <StateType>state;
-    //   return {
-    //     ...s1,
-    //     DictMenus: action.payload,
-    //   };
-    // },
-    // saveMenuSelectTree(state, action) {
-    //   const s1 = <StateType>state
-    //   return {
-    //     ...s1,
-    //     menuSelectTree: action.payload,
-    //   };
-    // },
+    saveDictDetail(state, action) {
+      const s1 = <StateType>state;
+      return {
+        ...s1,
+        dictDetail: action.payload,
+      };
+    },
   },
 };
 
