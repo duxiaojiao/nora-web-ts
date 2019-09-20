@@ -239,11 +239,6 @@ class Dict extends Component<DictProps, DictState> {
     });
   };
 
-  setClassName=(record,index)=>{//record代表表格行的内容，index代表行索引
-    //判断索引相等时添加行的高亮样式
-    return index === this.state.activeIndex ? `${style['l-table-row-active']}` : "";
-  }
-
   render() {
     const {
       dictMgt: {data, dictDetail},
@@ -293,7 +288,6 @@ class Dict extends Component<DictProps, DictState> {
                         onMouseLeave: event => {},
                       };
                     }}
-                    rowClassName={this.setClassName}
                   />
                 </div>
               </div>

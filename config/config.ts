@@ -115,11 +115,6 @@ export default {
               component: './Welcome',
             },
             {
-              name: '列表',
-              path: '/list/table/list',
-              component: './list/table/list',
-            },
-            {
               path: '/system',
               icon: 'table',
               name: '系统管理',
@@ -148,6 +143,35 @@ export default {
                   component: './404',
                 },
               ],
+            },
+            {
+              path: '/hr',
+              icon: 'team',
+              name: '核心人事',
+              routes: [
+                {
+                  name: '部门管理',
+                  path: '/hr/department',
+                  component: './hr/department',
+                },
+                {
+                  name: '员工信息',
+                  path: '/hr/employee',
+                  component: './hr/employee',
+                },
+              ],
+            },
+            {
+              path: '/manager',
+              icon: 'team',
+              name: '经理自助',
+              routes: [],
+            },
+            {
+              path: '/employee',
+              icon: 'user',
+              name: '员工自助',
+              routes: [],
             },
             {
               component: './404',
