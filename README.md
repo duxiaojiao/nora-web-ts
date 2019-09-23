@@ -4,6 +4,7 @@
 
 ## 界面预览
 
-
-
+![Image text](https://github.com/duxiaojiao/nora-web-ts/blob/master/src/assets/login.jpg?raw=true)
+![Image text](https://github.com/duxiaojiao/nora-web-ts/blob/master/src/assets/dict.jpg?raw=true)
+![Image text](https://github.com/duxiaojiao/nora-web-ts/blob/master/src/assets/doc.jpg?raw=true)
 
