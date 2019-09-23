@@ -17,6 +17,7 @@ import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState } from '@/models/connect';
 import { isAntDesignPro } from '@/utils/utils';
 import logo from '../assets/logo.svg';
+import {SelectParam} from 'antd/es/menu';
 
 export interface BasicLayoutProps extends ProLayoutProps {
   breadcrumbNameMap: {
@@ -70,7 +71,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   /**
    * constructor
    */
-
   useEffect(() => {
     if (dispatch) {
       dispatch({
@@ -96,13 +96,28 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     }
   };
 
+  const handleMenuSelect = (payload: SelectParam): void => {
+    console.log(222222,payload);
+    if (dispatch) {
+      dispatch({
+        type: 'menu/selectKey',
+        payload,
+      });
+    }
+  };
+
   return (
     <ProLayout
       logo={logo}
       collapsed={collapsed}
       onCollapse={handleMenuCollapse}
       openKeys={false}
-      // selectedKeys={['1001']}
+      selectedKeys={selectedKeys || []}
+      onSelect={handleMenuSelect}
+      menuProps={{
+        onSelect:handleMenuSelect,
+        // selectedKeys:['1001'],
+      }}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl) {
           return defaultDom;
@@ -141,4 +156,5 @@ export default connect(({global, settings, menu}: ConnectState) => ({
   collapsed: global.collapsed,
   settings,
   menuData: menu.menuData,
+  selectedKeys:menu.selectedKeys,
 }))(BasicLayout);

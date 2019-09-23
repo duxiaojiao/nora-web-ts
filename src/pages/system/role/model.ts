@@ -108,7 +108,7 @@ const Model: ModelType = {
 
   reducers: {
     save(state, action) {
-      const s1 = <StateType>state
+      const s1 = <StateType>state;
       return {
         ...s1,
         data: {

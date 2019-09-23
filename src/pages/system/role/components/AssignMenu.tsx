@@ -46,7 +46,6 @@ class AssignMenu extends Component<AssignMenuProps, AssignMenuState> {
 
   okHandler = () => {
     const {handleAssign} = this.props;
-    console.log('11111',this.state.checkedKeys);
     handleAssign(this.state.checkedKeys);
     this.setState({
       checkedKeys: [],

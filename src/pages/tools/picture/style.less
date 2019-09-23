@@ -1,0 +1,46 @@
+
+.avatar-uploader > .ant-upload {
+  width: 300px;
+  height: 300px;
+}
+
+.picture-card {
+  :global {
+    .ant-upload-list-picture-card {
+      .ant-upload-list-item {
+        float: left;
+        width: 300px !important;
+        height: 300px !important;
+        margin: 0 8px 8px 0;
+      }
+    }
+  }
+}
+
+.upload-example img {
+  width: 200px;
+  height: 200px;
+}
+
+.upload-example::before {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  width: 200px;
+  height: 200px;
+  background-color: #808080;
+  opacity: .8;
+  content: ' ';
+}
+
+.upload-example span {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  width: 200px;
+  height: 200px;
+  color: #fff;
+  line-height: 24px;
+  text-align: center;
+}
+

@@ -162,6 +162,18 @@ export default {
               ],
             },
             {
+              path: '/tools',
+              icon: 'tool',
+              name: '工具管理',
+              routes: [
+                {
+                  name: '照片墙',
+                  path: '/tools/picture',
+                  component: './tools/picture',
+                },
+              ],
+            },
+            {
               path: '/manager',
               icon: 'team',
               name: '经理自助',
