@@ -12,6 +12,7 @@ export async function addDict(params: DictItem) {
 export async function queryDict(params: DictParams) {
   return request('/system/dict', {
     method: 'GET',
+    params: params,
   });
 }
 

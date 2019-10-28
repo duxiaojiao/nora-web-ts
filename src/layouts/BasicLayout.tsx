@@ -113,7 +113,8 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
       onCollapse={handleMenuCollapse}
       openKeys={false}
       selectedKeys={selectedKeys || []}
-      onSelect={handleMenuSelect}
+      // onSelect={handleMenuSelect}
+      // onOpenChange={handleMenuSelect}
       menuProps={{
         onSelect:handleMenuSelect,
         // selectedKeys:['1001'],

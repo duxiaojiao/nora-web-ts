@@ -138,6 +138,17 @@ class Dict extends Component<DictProps, DictState> {
     });
   };
 
+  handleSearch = (value: string) => {
+    this.props.dispatch({
+      type: 'dictMgt/fetch',
+      payload: {
+        current: 1,
+        pageSize: 10,
+        dictCodeOrName: value,
+      }
+    });
+  };
+
   handleRemoveDetail = (id: number) => {
     const {dispatch} = this.props;
     dispatch({
@@ -267,7 +278,7 @@ class Dict extends Component<DictProps, DictState> {
                 <div className={styles.tableListForm}>
                   <Search
                     placeholder="输入字典编码或名字搜索"
-                    onSearch={value => console.log(value)}
+                    onSearch={value => this.handleSearch(value)}
                     enterButton
                     style={{width: 300,marginBottom:20}}
                   />

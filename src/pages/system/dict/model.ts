@@ -1,7 +1,6 @@
 import {AnyAction, Reducer} from 'redux';
 import {EffectsCommandMap} from 'dva';
 import {addDict, queryDict, updateDict, removeDict, addDictItem,updateDictItem,removeDictItem, queryDictItem} from './service';
-
 import {DictData, DictDetail} from './data.d';
 import {ResponseType} from '@/services/common'
 
