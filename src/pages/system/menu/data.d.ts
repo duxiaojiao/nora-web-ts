@@ -6,6 +6,7 @@ export interface MenuItem {
   router: string;
   icon: string;
   menuType: string;
+  permission: string;
   url: string;
   method: string;
   sorter: string;

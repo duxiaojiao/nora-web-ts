@@ -1,9 +1,9 @@
-import {Form, Input, Modal, Select, TreeSelect, InputNumber, Row, Col} from 'antd';
+import { Form, Input, Modal, Select, TreeSelect, InputNumber, Row, Col } from 'antd';
 
 import { FormComponentProps } from 'antd/es/form';
 import React from 'react';
-import {MenuItem} from "../data.d";
-import {MenuSelectTree} from "../model";
+import { MenuItem } from '../data.d';
+import { MenuSelectTree } from '../model';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -15,13 +15,13 @@ interface OperateMenuProps extends FormComponentProps {
   handleModalVisible: () => void;
 }
 const OperateMenu: React.FC<OperateMenuProps> = props => {
-  const {modalVisible, record, form, handleAdd, handleModalVisible, menuSelectTree} = props;
-  const {getFieldDecorator} = form;
+  const { modalVisible, record, form, handleAdd, handleModalVisible, menuSelectTree } = props;
+  const { getFieldDecorator } = form;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       form.resetFields();
-      handleAdd({menuId: record.menuId, ...fieldsValue});
+      handleAdd({ menuId: record.menuId, ...fieldsValue });
     });
   };
   const formItemLayout = {
@@ -39,38 +39,25 @@ const OperateMenu: React.FC<OperateMenuProps> = props => {
     >
       <Row gutter={24}>
         <Col span={10}>
-          <FormItem
-            {...formItemLayout}
-            label="菜单名称"
-          >
+          <FormItem {...formItemLayout} label="菜单名称">
             {getFieldDecorator('menuName', {
-              rules: [{required: true}],
+              rules: [{ required: true }],
               initialValue: record.menuName,
-            })(
-              <Input/>
-            )}
+            })(<Input />)}
           </FormItem>
         </Col>
         <Col span={10}>
-          <FormItem
-            {...formItemLayout}
-            label="菜单编码"
-          >
+          <FormItem {...formItemLayout} label="菜单编码">
             {getFieldDecorator('menuCode', {
-              rules: [{required: true}],
+              rules: [{ required: true }],
               initialValue: record.menuCode,
-            })(
-              <Input/>
-            )}
+            })(<Input />)}
           </FormItem>
         </Col>
       </Row>
       <Row gutter={24}>
         <Col span={10}>
-          <FormItem
-            {...formItemLayout}
-            label="上级菜单"
-          >
+          <FormItem {...formItemLayout} label="上级菜单">
             {getFieldDecorator('parentId', {
               // rules: [{ required: true }],
               initialValue: record.parentId,
@@ -78,49 +65,36 @@ const OperateMenu: React.FC<OperateMenuProps> = props => {
               <TreeSelect
                 style={{ maxWidth: 200, width: '100%' }}
                 //value={this.state.value}
-                dropdownStyle={{maxHeight: 400, overflow: 'auto'}}
+                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                 treeData={menuSelectTree}
                 placeholder="Please select"
                 treeDefaultExpandAll
                 // onChange={this.onChange}
-              />
+              />,
             )}
           </FormItem>
         </Col>
         <Col span={10}>
-          <FormItem
-            {...formItemLayout}
-            label="路由"
-          >
+          <FormItem {...formItemLayout} label="路由">
             {getFieldDecorator('router', {
               initialValue: record.router,
-            })(
-              <Input/>
-            )}
+            })(<Input />)}
           </FormItem>
         </Col>
       </Row>
       <Row gutter={24}>
         <Col span={10}>
-          <FormItem
-            {...formItemLayout}
-            label="图标"
-          >
+          <FormItem {...formItemLayout} label="图标">
             {getFieldDecorator('icon', {
               // rules: [{ required: true }],
               initialValue: record.icon,
-            })(
-              <Input/>
-            )}
+            })(<Input />)}
           </FormItem>
         </Col>
         <Col span={10}>
-          <FormItem
-            {...formItemLayout}
-            label="菜单类型"
-          >
+          <FormItem {...formItemLayout} label="菜单类型">
             {getFieldDecorator('menuType', {
-              rules: [{required: true, message: '请选择菜单类型！'}],
+              rules: [{ required: true, message: '请选择菜单类型！' }],
               initialValue: record.menuType,
             })(
               <Select
@@ -131,50 +105,43 @@ const OperateMenu: React.FC<OperateMenuProps> = props => {
                 <Option value="1">一级菜单</Option>
                 <Option value="2">子菜单</Option>
                 <Option value="3">按钮</Option>
-              </Select>
+              </Select>,
             )}
           </FormItem>
         </Col>
       </Row>
       <Row gutter={24}>
         <Col span={10}>
-          <FormItem
-            {...formItemLayout}
-            label="请求链接"
-          >
+          <FormItem {...formItemLayout} label="请求链接">
             {getFieldDecorator('url', {
               // rules: [{required: true}],
               initialValue: record.url,
-            })(
-              <Input/>
-            )}
+            })(<Input />)}
           </FormItem>
         </Col>
         <Col span={10}>
-          <FormItem
-            {...formItemLayout}
-            label="请求方法"
-          >
+          <FormItem {...formItemLayout} label="请求方法">
             {getFieldDecorator('method', {
               // rules: [{required: true}],
               initialValue: record.method,
-            })(
-              <Input/>
-            )}
+            })(<Input />)}
           </FormItem>
         </Col>
       </Row>
       <Row gutter={24}>
         <Col span={10}>
-          <FormItem
-            {...formItemLayout}
-            label="排序"
-          >
+          <FormItem {...formItemLayout} label="权限标识">
+            {getFieldDecorator('permission', {
+              // rules: [{required: true}],
+              initialValue: record.permission,
+            })(<Input />)}
+          </FormItem>
+        </Col>
+        <Col span={10}>
+          <FormItem {...formItemLayout} label="排序">
             {getFieldDecorator('sorter', {
               initialValue: record.sorter,
-            })(
-              <InputNumber min={0} />
-            )}
+            })(<InputNumber min={0} />)}
           </FormItem>
         </Col>
       </Row>
