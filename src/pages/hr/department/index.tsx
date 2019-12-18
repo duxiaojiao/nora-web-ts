@@ -1,17 +1,26 @@
-import React, { Component,Fragment } from 'react';
-import {Form, Table, Card, Row, Col, Button, Input, message,Divider,Popconfirm,Tree} from 'antd';
+import React, { Component, Fragment } from 'react';
+import {
+  Form,
+  Table,
+  Card,
+  Row,
+  Col,
+  Button,
+  Input,
+  message,
+  Divider,
+  Popconfirm,
+  Tree,
+} from 'antd';
 import { FormComponentProps } from 'antd/es/form';
-import {ConnectProps} from "@/models/connect";
+import { ConnectProps } from '@/models/connect';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import {StateType} from "./model";
-import {DepartmentItem} from './data.d';
-import styles from "./style.less";
+import { StateType } from './model';
+import { DepartmentItem } from './data.d';
+import styles from './style.less';
 import OperateDept from './components/OperateDept';
 import { connect } from 'dva';
-import {ResponseType} from "@/services/common";
-
-
-
+import { ResponseType } from '@/services/common';
 
 interface DepartmentProps extends FormComponentProps, ConnectProps {
   loading: boolean;
@@ -20,19 +29,19 @@ interface DepartmentProps extends FormComponentProps, ConnectProps {
 
 interface DepartmentState {
   modalVisible: boolean;
-  modalVisibleDetail:boolean,
+  modalVisibleDetail: boolean;
   formValues: { [key: string]: string };
   record: Partial<DepartmentItem>;
   // recordDetail: Partial<DictDetail>;
-  selectRow:Partial<DepartmentItem>;
-  checkedKeys:[],
+  selectRow: Partial<DepartmentItem>;
+  checkedKeys: [];
 }
 
 @connect(
   ({
-     deptMgt,
-     loading,
-   }: {
+    deptMgt,
+    loading,
+  }: {
     deptMgt: StateType;
     loading: {
       models: {
@@ -44,9 +53,7 @@ interface DepartmentState {
     loading: loading.models.deptMgt,
   }),
 )
-
 class Department extends Component<DepartmentProps, DepartmentState> {
-
   state: DepartmentState = {
     modalVisible: false,
     modalVisibleDetail: false,
@@ -54,44 +61,49 @@ class Department extends Component<DepartmentProps, DepartmentState> {
     record: {},
     // recordDetail: {},
     selectRow: {},
-    checkedKeys:[],
+    checkedKeys: [],
   };
 
   componentDidMount() {
-    const {dispatch} = this.props;
-    dispatch({
-      type: 'deptMgt/fetch',
-      payload: {}
-    });
+    const { dispatch } = this.props;
+    if (dispatch) {
+      dispatch({
+        type: 'deptMgt/fetch',
+        payload: {},
+      });
+    }
   }
 
   handleAdd = (fields: DepartmentItem) => {
-    const {dispatch} = this.props;
-    // if (fields.id) {
-    //   dispatch({
-    //     type: 'dictMgt/update',
-    //     payload: fields,
-    //   }).then((response: ResponseType) => {
-    //     if (response.code === 0) {
-    //       this.handleModalVisible();
-    //       message.success('更新成功');
-    //     } else {
-    //       message.error(response.msg)
-    //     }
-    //   });
-    // } else {
-    //   dispatch({
-    //     type: 'dictMgt/add',
-    //     payload: fields,
-    //   }).then((response: ResponseType) => {
-    //     if (response.code === 0) {
-    //       this.handleModalVisible();
-    //     } else {
-    //       message.error(response.msg)
-    //     }
-    //   })
-    // }
-  }
+    const { dispatch } = this.props;
+    if (!dispatch) {
+      return;
+    }
+    if (fields.deptId) {
+      dispatch({
+        type: 'deptMgt/update',
+        payload: fields,
+      }).then((response: ResponseType) => {
+        if (response.code === 0) {
+          this.handleModalVisible();
+          message.success('更新成功');
+        } else {
+          message.error(response.msg);
+        }
+      });
+    } else {
+      dispatch({
+        type: 'deptMgt/add',
+        payload: fields,
+      }).then((response: ResponseType) => {
+        if (response.code === 0) {
+          this.handleModalVisible();
+        } else {
+          message.error(response.msg);
+        }
+      });
+    }
+  };
 
   handleModalVisible = (flag?: boolean, record?: DepartmentItem) => {
     this.setState({
@@ -102,10 +114,16 @@ class Department extends Component<DepartmentProps, DepartmentState> {
 
   render() {
     const {
-      deptMgt: { departmentTree, },
+      deptMgt: { departmentTree },
       loading,
     } = this.props;
-    const {modalVisible, record, modalVisibleDetail, selectRow: {deptId},checkedKeys} = this.state;
+    const {
+      modalVisible,
+      record,
+      modalVisibleDetail,
+      selectRow: { deptId },
+      checkedKeys,
+    } = this.state;
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
@@ -114,11 +132,17 @@ class Department extends Component<DepartmentProps, DepartmentState> {
       <PageHeaderWrapper>
         <Row gutter={8}>
           <Col span={12}>
-            <Card title="部门树" bordered={false} extra={<div className={styles.tableListOperator}>
-              <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                新增
-              </Button>
-            </div>}>
+            <Card
+              title="部门树"
+              bordered={false}
+              extra={
+                <div className={styles.tableListOperator}>
+                  <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+                    新增
+                  </Button>
+                </div>
+              }
+            >
               <Tree
                 treeData={departmentTree}
                 checkable
@@ -127,18 +151,17 @@ class Department extends Component<DepartmentProps, DepartmentState> {
                 defaultExpandedKeys={checkedKeys}
                 defaultSelectedKeys={checkedKeys}
                 defaultCheckedKeys={checkedKeys}
-                style={{width: 300}}
+                style={{ width: 300 }}
                 // onSelect={this.onSelect}
                 // onCheck={this.onCheck}
               />
             </Card>
           </Col>
           <Col span={12}>
-            <Card title="部门明细" bordered={false}>
-            </Card>
+            <Card title="部门明细" bordered={false}></Card>
           </Col>
         </Row>
-        <OperateDept {...parentMethods} modalVisible={modalVisible} record={record}/>
+        <OperateDept {...parentMethods} modalVisible={modalVisible} record={record} />
       </PageHeaderWrapper>
     );
   }

@@ -1,8 +1,17 @@
-import {AnyAction, Reducer} from 'redux';
-import {EffectsCommandMap} from 'dva';
-import {addDict, queryDict, updateDict, removeDict, addDictItem,updateDictItem,removeDictItem, queryDictItem} from './service';
-import {DictData, DictDetail} from './data.d';
-import {ResponseType} from '@/services/common'
+import { AnyAction, Reducer } from 'redux';
+import { EffectsCommandMap } from 'dva';
+import {
+  addDict,
+  queryDict,
+  updateDict,
+  removeDict,
+  addDictItem,
+  updateDictItem,
+  removeDictItem,
+  queryDictItem,
+} from './service';
+import { DictData, DictDetail } from './data.d';
+import { ResponseType } from '@/services/common';
 
 export interface StateType {
   data: DictData;
@@ -10,14 +19,14 @@ export interface StateType {
 }
 
 export interface DictListResponse extends ResponseType {
-  data:{
-    records:DictData[]
-    total:number
-    size:number
-    current:number
-    searchCount:boolean
-    pages:number
-  }
+  data: {
+    records: DictData[];
+    total: number;
+    size: number;
+    current: number;
+    searchCount: boolean;
+    pages: number;
+  };
 }
 
 export interface DictItemListResponse extends ResponseType {
@@ -34,7 +43,7 @@ export interface ModelType {
   state: StateType;
   effects: {
     fetch: Effect;
-    fetchDetail:Effect;
+    fetchDetail: Effect;
     add: Effect;
     remove: Effect;
     update: Effect;
@@ -44,7 +53,7 @@ export interface ModelType {
   };
   reducers: {
     save: Reducer<StateType>;
-    saveDictDetail:Reducer<StateType>;
+    saveDictDetail: Reducer<StateType>;
   };
 }
 
@@ -70,7 +79,7 @@ const Model: ModelType = {
     *add({ payload, callback }, { call, put }) {
       const response = yield call(addDict, payload);
       yield put({ type: 'fetch' });
-      if (callback) callback();
+      if (callback) callback(response);
       return response;
     },
     *remove({ payload, callback }, { call, put }) {
@@ -82,29 +91,29 @@ const Model: ModelType = {
     *update({ payload, callback }, { call, put }) {
       const response = yield call(updateDict, payload);
       yield put({ type: 'fetch' });
-      if (callback) callback();
+      if (callback) callback(response);
       return response;
     },
-    * fetchDetail({payload}, {call, put}) {
+    *fetchDetail({ payload }, { call, put }) {
       const response: DictItemListResponse = yield call(queryDictItem, payload);
       yield put({
         type: 'saveDictDetail',
         payload: response.data,
       });
     },
-    * addDictItem({payload, callback}, {call, put}) {
+    *addDictItem({ payload, callback }, { call, put }) {
       const response = yield call(addDictItem, payload);
       // yield put({type: 'fetchDetail'});
       if (callback) callback();
       return response;
     },
-    * updateDictItem({payload, callback}, {call, put}) {
+    *updateDictItem({ payload, callback }, { call, put }) {
       const response = yield call(updateDictItem, payload);
       // yield put({type: 'fetchDetail'});
       if (callback) callback();
       return response;
     },
-    * removeDictItem({payload, callback}, {call, put}) {
+    *removeDictItem({ payload, callback }, { call, put }) {
       const response = yield call(removeDictItem, payload);
       // yield put({type: 'fetchDetail'});
       if (callback) callback();
@@ -114,7 +123,7 @@ const Model: ModelType = {
 
   reducers: {
     save(state, action) {
-      const s1 = <StateType>state
+      const s1 = <StateType>state;
       return {
         ...s1,
         data: {
@@ -123,7 +132,7 @@ const Model: ModelType = {
             total: action.payload.total,
             pageSize: action.payload.size,
             current: action.payload.current,
-          }
+          },
         },
       };
     },
